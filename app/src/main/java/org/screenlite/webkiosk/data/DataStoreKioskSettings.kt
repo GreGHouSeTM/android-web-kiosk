@@ -30,7 +30,7 @@ class DataStoreKioskSettings(private val context: Context) : KioskSettings {
 
     override fun getStartUrl(): Flow<String> {
         return context.dataStore.data.map { prefs ->
-            prefs[keyStartUrl] ?: "https://screenlite.org"
+            prefs[keyStartUrl] ?: "https://www.psg.fr/psg-tv"
         }
     }
 
