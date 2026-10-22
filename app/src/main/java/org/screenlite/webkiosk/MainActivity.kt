@@ -32,11 +32,9 @@ import androidx.compose.ui.platform.LocalContext
 import org.screenlite.webkiosk.app.FullScreenHelper
 import org.screenlite.webkiosk.app.IdleBrightnessController
 import org.screenlite.webkiosk.app.NotificationPermissionHelper
-import org.screenlite.webkiosk.app.StayOnTopServiceStarter
 import org.screenlite.webkiosk.app.TapUnlockHandler
 import org.screenlite.webkiosk.components.MainScreen
 import org.screenlite.webkiosk.components.TouchKioskInputOverlay
-import org.screenlite.webkiosk.components.TvKioskInputOverlay
 import org.screenlite.webkiosk.data.KioskSettingsFactory
 import org.screenlite.webkiosk.ui.theme.ScreenliteWebKioskTheme
 import org.screenlite.webkiosk.ui.theme.isTvDevice
@@ -49,7 +47,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         FullScreenHelper.enableImmersiveMode(this.window)
-        StayOnTopServiceStarter.ensureRunning(this)
 
         unlockHandler = TapUnlockHandler {
             openSettings()
@@ -112,12 +109,9 @@ fun AppContent(unlockHandler: TapUnlockHandler, activity: Activity) {
     Box(Modifier.fillMaxSize().background(Color.White)) {
         MainScreen(activity = activity, modifier = Modifier.fillMaxSize())
 
-        if(isTv) {
-            TvKioskInputOverlay(onTap = {
-                idleController.onUserInteraction()
-                unlockHandler.registerTap()
-            })
-        } else {
+        // On TV, leave the WebView unobstructed so the remote's D-pad and OK
+        // keys can reach links, buttons and video controls on the website.
+        if (!isTv) {
             TouchKioskInputOverlay(
                 onTap = { unlockHandler.registerTap() },
                 modifier = Modifier.align(Alignment.BottomStart),
@@ -131,9 +125,7 @@ fun AppContent(unlockHandler: TapUnlockHandler, activity: Activity) {
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.Black)
-                    .clickable {
-                        idleController.onUserInteraction()
-                    }
+                    .clickable { idleController.onUserInteraction() }
                     .focusable()
                     .focusRequester(idleFocusRequester)
                     .onKeyEvent {
