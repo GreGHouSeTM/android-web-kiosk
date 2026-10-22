@@ -9,11 +9,11 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "org.screenlite.webkiosk"
+        applicationId = "fr.psgtv.kiosk"
         minSdk = 22
         targetSdk = 36
-        versionCode = 11
-        versionName = "0.0.11"
+        versionCode = 1
+        versionName = "1.0"
     }
 
     signingConfigs {
