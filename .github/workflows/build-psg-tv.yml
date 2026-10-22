@@ -15,6 +15,11 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
+      - name: Install ImageMagick for Android TV banner generation
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y imagemagick
+
       - name: Apply PSG launcher icon and Android TV banner
         run: |
           set -e
